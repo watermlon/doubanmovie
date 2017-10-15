@@ -57,9 +57,7 @@ export default {
          case 'musiclist':
         this.title = '音乐';
         break;
-
       }
-      // this.title = 
     }
   }
 }

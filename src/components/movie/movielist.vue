@@ -1,12 +1,10 @@
 <template>
 	<div>
 		<mt-swipe :auto="4000" class='sroll'>
-			  <mt-swipe-item v-for='item in msg'>
+			  <mt-swipe-item v-for='(item,index) in msg' :key='index'>
 			  	<img :src="item.images.large">
 			  	<p class="mtitle">{{item.title}}</p>
 			  </mt-swipe-item>
-<!-- 			  <mt-swipe-item>2</mt-swipe-item>
-			  <mt-swipe-item>3</mt-swipe-item> -->
 		</mt-swipe>
 	</div>
 </template>
@@ -54,5 +52,6 @@ export default{
 		color: #DFDEDE;
 		text-align: center;
 		font-size: 25px;
+		line-height: 50px;
 	}
 </style>
