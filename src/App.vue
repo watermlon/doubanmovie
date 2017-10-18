@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-      <mt-header :title="title">
-        <router-link to="/" slot="left">
-          <mt-button icon="back">返回</mt-button>
-        </router-link>
+      <mt-header :title="title" class='header'>
+        
+          <mt-button icon="back" slot="left" @click='back'>返回</mt-button>
+        
         <mt-button icon="more" slot="right"></mt-button>
-      </mt-header>
+      </mt-header> 
       <router-view/>
-      <mt-tabbar>
+      <mt-tabbar class='footer'>
         <mt-tab-item id="home">
           <router-link to='/' slot="icon" class="fa fa-home" aria-hidden="true"></router-link>
           首页
         </mt-tab-item>
         <mt-tab-item id="movie">
-          <router-link to='/movielist' slot="icon" class="fa fa-film" aria-hidden="true"></router-link>
+          <router-link to='/movie' slot="icon" class="fa fa-film" aria-hidden="true"></router-link>
           电影
         </mt-tab-item>
         <mt-tab-item id="book">
@@ -59,6 +59,10 @@ export default {
         break;
       }
     }
+  },
+  back(){
+    this.$router.go(-1);
+    alert(13)
   }
 }
 </script>
@@ -66,5 +70,17 @@ export default {
 <style>
 .fa{
   font-size: 20px;
+}
+.footer{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+} 
+.header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 </style>

@@ -8,7 +8,7 @@
             <el-option label="音乐" value="2"></el-option>
             <el-option label="图书" value="3"></el-option>
           </el-select>
-          <el-button slot="append" icon="search"></el-button>
+          <el-button slot="append" icon="search" @click='getdata'></el-button>
         </el-input>
       </div>
   </div>
@@ -29,10 +29,10 @@ export default {
   },
   methods:{
     getdata(){
-      let url = api+'v2/movie/coming_soon'
-      this.$http.jsonp(url).then(function(res){
+      // let url = api+'v2/movie/coming_soon'
+      // this.$http.jsonp(url).then(function(res){
           
-      })
+      // })
     }
   }
 }
