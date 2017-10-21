@@ -12,87 +12,104 @@
 			<mt-tab-item id='top250'>口碑榜</mt-tab-item>
 		</mt-navbar>
 		<br>
-		<mt-tab-container v-model="selected">
-			<mt-tab-container-item :id="selected">
-				<ul class="movielist">
-					<li v-for='(item,index) in movieData' :key='index'>
-						<router-link v-bind="{to:'/movie/movielist/'+item.id}">
-							<img :src="item.images.small" class="fl">
-							<div class="movielistTitle">
-								<p class="title">{{item.title}}</p>
-								<p class="tag"><span v-for='v in item.genres'>{{v}}&nbsp;</span></p>
-								<p class="casts"><span v-for='val in item.casts'>{{val.name}}&nbsp;</span></p>
-							</div>
-						</router-link>
-					</li>
-				</ul>
-			</mt-tab-container-item>
-		</mt-tab-container>
+		<ul class="movielist">
+			<li v-for='(item,index) in movieData' :key='index'>
+				<router-link v-bind="{to:'/movie/movielist/'+item.id}">
+					<img :src="item.images.small" class="fl">
+					<div class="movielistTitle">
+						<p class="title">{{item.title}}</p>
+						<p class="tag">
+							<span v-for='(v,i) in item.genres' :key="i">{{v}}&nbsp;</span>
+						</p>
+						<p class="casts">
+							主演：<span v-for='(val,index) in item.casts' :key="index">{{val.name}}&nbsp;</span>
+						</p>
+					</div>
+				</router-link>
+			</li>
+		</ul>
+		<div class="pageing clearfix">
+			<el-button type="primary" icon="arrow-left" class="fl pre">上一页</el-button>
+			  <el-select v-model="pageNum" placeholder="">
+				<el-option
+				v-for="item in allpages"
+				:key="item"
+				:label="item"
+				:value="item">
+				</el-option>
+			</el-select>
+  			<el-button type="primary" class="fr next">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+		</div>
 	</div>
 </template>
 
 <script>
 
-// import { Navbar, TabItem } from 'mint-ui';
-import {api} from '../../kits/common.js';
+import { api } from '../../kits/common.js';
 import { Indicator } from 'mint-ui';
-export default{
-	data(){
+export default {
+	data() {
 		return {
-			imgurl:[],
-			movieData:[],
-			selected:'1',
-			movielist:{}
+			imgurl: [],
+			movieData: [],
+			selected: 'in_theaters',
+			movielist: {},
+			pages: 1,
+			allpages: 1,
+			pageNum:1
 		}
 	},
-	watch:{
-		selected:function(o,n){
-			console.log(o)
-			let url = o
-			this.getdata(o)
+	watch: {
+		selected: function(o, n) {
+			console.log(o);
+			let url = o;
+			this.getdata(o);
+			this.imgurl = this.movieData.slice(0, 5);
 		}
 	},
-	created(){
-		let apiParms = 'in_theaters'
+	created() {
+		let apiParms = 'in_theaters';
 		this.getdata(apiParms);
 	},
-	methods:{
-		getdata(apiParms){
+	methods: {
+		getdata(apiParms) {
+			//  先检查下缓存中有没有数据，如果有就从缓存中取，不请求接口
 			if (this.movielist[apiParms]) {
-				console.log(123,this.movielist[apiParms])
-				this.movieData=this.movielist[apiParms]
+				this.movieData = this.movielist[apiParms];
 				Indicator.close();
 				return
 			}
-			let url = api+'v2/movie/'+apiParms
+			let url = api + 'v2/movie/' + apiParms
 			Indicator.open('加载中...');
-			this.$http.jsonp(url).then((res)=>{
+			this.$http.jsonp(url).then((res) => {
 				let data = res.body;
-				this.imgurl = data.subjects.slice(0,5);
 				this.movieData = data.subjects;
-				console.log(this.movieData);
-				this.movielist[apiParms]=data.subjects;
+				this.imgurl = data.subjects.slice(0, 5)
+				this.movielist[apiParms] = data.subjects;//  缓存下数据，防止对接口请求过多
+				this.allpages = Math.ceil(data.total / data.count);//  获取总页数
 				Indicator.close();
-			},(err)=>{alert('服务器错误');Indicator.close();})
+			}, (err) => { alert('服务器错误'); Indicator.close(); })
 		}
 	}
 }
 </script>
 
 <style scoped>
-.sroll{
+.sroll {
 	width: 100%;
 	height: 7rem;
 	position: relative;
 }
-.sroll img{
+
+.sroll img {
 	width: 100%;
 	height: 100%;
 }
-.mtitle{
+
+.mtitle {
 	position: absolute;
 	bottom: 0;
-	background-color: rgba(0,0,0,0.3);
+	background-color: rgba(0, 0, 0, 0.3);
 	width: 100%;
 	height: 50px;
 	color: #DFDEDE;
@@ -100,32 +117,53 @@ export default{
 	font-size: 25px;
 	line-height: 50px;
 }
-.movielist li{
+
+.movielist li {
 	margin-top: 5px;
 	width: 100%;
 	height: 110px;
 	border-bottom: 1px solid #C8C6C6;
 	padding-left: 20px;
 }
-.movielistTitle{
+
+.movielistTitle {
 	padding-left: 75px;
 }
-.movielistTitle .title{
+
+.movielistTitle .title {
 	font-size: 20px;
 }
-.movielistTitle .tag{
+
+.movielistTitle .tag {
 	font-size: 15px;
 	line-height: 30px;
 	height: 30px;
+	color: #666
 }
-.movielistTitle .casts{
-	font-size: 15px;
+
+.movielistTitle .casts {
+	font-size: 12px;
 	line-height: 30px;
 	height: 30px;
+	color: #999
 }
-.nav li{
+
+.nav li {
 	margin-left: 1rem;
 	float: left;
-	font-size:16px;
+	font-size: 16px;
+}
+.pre {
+	margin-left: 30px;
+}
+.next{
+	margin-right: 30px;
+}
+.pageing{
+	text-align: center;
+	margin: 10px 0;
+}
+.el-select{
+	width: 20%;
 }
 </style>
