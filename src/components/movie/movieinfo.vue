@@ -32,9 +32,12 @@
 			<div  class="text item">
 			  	<!-- 主演：<span v-for="o in movieinfo.casts" :key="o.id">{{o.name}}&nbsp;&nbsp;</span><br> -->
 					<ul>
-						<li v-for="o in movieinfo.casts" :key="o.id"><img :src="o.avatars.small" alt=""><span >{{o.name}}&nbsp;&nbsp;</span></li>
+						<li v-for="o in movieinfo.casts" :key="o.id"><router-link v-bind="{to:'/movie/info/'+o.id}"><img :src="o.avatars.small" alt=""><br><span >{{o.name}}&nbsp;&nbsp;</span></router-link></li>
 					</ul>
-			  	导演：<span v-for="v in movieinfo.directors" :key="v.id">{{v.name}}&nbsp;&nbsp;</span>
+			  	<!-- 导演：<span v-for="v in movieinfo.directors" :key="v.id">{{v.name}}&nbsp;&nbsp;</span> -->
+					<ul>
+						<li v-for="o in movieinfo.directors" :key="o.id"><img :src="o.avatars.small" alt=""><br><span >{{o.name}}&nbsp;&nbsp;</span></li>
+					</ul>
 			</div>
 		</div>
 	</div>
@@ -84,10 +87,11 @@ export default{
 		padding: 10px;
 	}
 	.text ul{
-		height: 103px;
+		height: 150px;
 		overflow: auto;
 	}
 	.text li{
 		float: left;
+		margin-left: 20px;
 	}
 </style>

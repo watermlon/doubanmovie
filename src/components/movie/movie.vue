@@ -29,7 +29,7 @@
 			</li>
 		</ul>
 		<div class="pageing clearfix">
-			<el-button type="primary" icon="arrow-left" class="fl pre">上一页</el-button>
+			<el-button type="primary" icon="arrow-left" class="fl pre" @click="pre">上一页</el-button>
 			  <el-select v-model="pageNum" placeholder="">
 				<el-option
 				v-for="item in allpages"
@@ -38,7 +38,7 @@
 				:value="item">
 				</el-option>
 			</el-select>
-  			<el-button type="primary" class="fr next">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+  			<el-button type="primary" class="fr next" @click="next">下一页<i class="el-icon-arrow-right el-icon--right"></i></el-button>
 		</div>
 	</div>
 </template>
@@ -89,6 +89,24 @@ export default {
 				this.allpages = Math.ceil(data.total / data.count);//  获取总页数
 				Indicator.close();
 			}, (err) => { alert('服务器错误'); Indicator.close(); })
+		},
+		pre(){
+			if(this.pageNum==1){
+				return
+			}
+			
+			let apiParms = this.selected+'?start='+this.pageNum*20+'&count=20';
+			this.pageNum--
+			this.getdata(apiParms);
+		},
+		next(){
+			if(this.pageNum==this.allpages){
+				return
+			}
+			console.log(this.pageNum*20)
+			let apiParms = this.selected+'?start='+this.pageNum*20+'&count=20';
+			this.pageNum++
+			this.getdata(apiParms);
 		}
 	}
 }
